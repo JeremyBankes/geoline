@@ -54,5 +54,5 @@ jobs:
             --mkpath \
             --rsh="ssh -p $SSH_PORT -o StrictHostKeyChecking=yes" \
             --verbose \
-            "$GITHUB_WORKSPACE/public" \
+            "$GITHUB_WORKSPACE/public/" \
             "$SSH_USER@$SSH_HOST:${REMOTE_DESTINATION}"
