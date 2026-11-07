@@ -50,7 +50,6 @@ jobs:
             --compress \
             --delay-updates \
             --delete \
-            --delete-excluded \
             --itemize-changes \
             --mkpath \
             --rsh="ssh -p $SSH_PORT -o StrictHostKeyChecking=yes" \
