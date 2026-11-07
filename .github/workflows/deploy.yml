@@ -51,12 +51,9 @@ jobs:
             --delay-updates \
             --delete \
             --delete-excluded \
-            --exclude='.*' \
-            --exclude='/node_modules' \
-            --exclude='/README.md' \
             --itemize-changes \
             --mkpath \
             --rsh="ssh -p $SSH_PORT -o StrictHostKeyChecking=yes" \
             --verbose \
-            "$GITHUB_WORKSPACE/" \
+            "$GITHUB_WORKSPACE/public" \
             "$SSH_USER@$SSH_HOST:${REMOTE_DESTINATION}"
