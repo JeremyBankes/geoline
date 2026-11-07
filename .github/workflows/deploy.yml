@@ -1,0 +1,51 @@
+name: Deploy to Hyperion
+run-name: Production deployment · ${{ github.actor }}
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+concurrency:
+  group: production-deployment
+  cancel-in-progress: false
+jobs:
+  deploy:
+    name: Deploy application
+    runs-on: ubuntu-latest
+    env:
+      SSH_HOST: ${{ vars.SSH_HOST }}
+      SSH_PORT: ${{ vars.SSH_PORT }}
+      SSH_USER: ${{ vars.SSH_USER }}
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      SSH_KNOWN_HOSTS: ${{ vars.SSH_KNOWN_HOSTS }}
+      REMOTE_DESTINATION: ${{ vars.REMOTE_DESTINATION }}
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v7
+        with:
+          ref: main
+      - name: Configure SSH authentication
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s' "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          printf '%s' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/id_ed25519
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: Synchronize deployment files
+        run: |
+          rsync \
+            --archive \
+            --mkpath \
+            --chmod="D2775,F664" \
+            --compress \
+            --delay-updates \
+            --delete \
+            --delete-excluded \
+            --exclude='.*' \
+            --exclude='/README.md' \
+            --itemize-changes \
+            --rsh="ssh -p $SSH_PORT -o StrictHostKeyChecking=yes" \
+            --verbose \
+            "$GITHUB_WORKSPACE/" \
+            "$SSH_USER@$SSH_HOST:${REMOTE_DESTINATION}"
