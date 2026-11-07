@@ -54,7 +54,7 @@ jobs:
             --delete-excluded \
             --exclude='.*' \
             --exclude='/README.md' \
-            --filter=':- .gitignore'
+            --filter=':- .gitignore' \
             --itemize-changes \
             --rsh="ssh -p $SSH_PORT -o StrictHostKeyChecking=yes" \
             --verbose \
