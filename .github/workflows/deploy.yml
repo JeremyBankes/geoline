@@ -46,16 +46,16 @@ jobs:
         run: |
           rsync \
             --archive \
-            --mkpath \
             --chmod="D2775,F664" \
             --compress \
             --delay-updates \
             --delete \
             --delete-excluded \
             --exclude='.*' \
+            --exclude='/node_modules' \
             --exclude='/README.md' \
-            --filter=':- .gitignore' \
             --itemize-changes \
+            --mkpath \
             --rsh="ssh -p $SSH_PORT -o StrictHostKeyChecking=yes" \
             --verbose \
             "$GITHUB_WORKSPACE/" \
